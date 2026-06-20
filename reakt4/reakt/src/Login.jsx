@@ -7,44 +7,42 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
 const Login = () => {
     const navigate = useNavigate()
-    const [errors, setErrors] = useState('') // создание функции ошибок
-    const [fromData, setfromData] = useState({ // создание функции данных, которые будут передаваться
-        // сами данные
+    const [errors, setErrors] = useState('')
+    const [fromData, setfromData] = useState({
         username: '',
         email: '',
         password: '',
     })
 
-    const handelChange = (e) => { // создание функции изменений данных
-        const { name, value } = e.target // данные которые будут вноситься (name- название строки, value-данные находящейся в этой строке)
-        setfromData({ ...fromData, [name]: value }) // берется из fromData данные name и value и передает в setfromData
+    const handelChange = (e) => {
+        const { name, value } = e.target
+        setfromData({ ...fromData, [name]: value })
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            // const response = await fetch('адрес сервера')
             const response = await fetch(`${API_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ // отправляем конкретные данные
+                body: JSON.stringify({
                     username: fromData.username,
                     email: fromData.email,
                     password: fromData.password,
                 }),
                 credentials: 'include'
             })
-            if (!response.ok) { // если не получили данные, то выдаем ошибку
-                const data = await response.json() // ожидаем до последнего конца
+            if (!response.ok) {
+                const data = await response.json()
                 throw new Error(data.error || 'Ошибка входа')
             } else {
-                const data = await response.json() // если получили данные, то создаем токен
+                const data = await response.json()
                 localStorage.setItem('token', data.token)
                 navigate('/profile', { replace: true })
             }
-        } catch (error) { // ловим ошибки
+        } catch (error) {
             setErrors(error.message)
             localStorage.removeItem('token')
         }
@@ -58,7 +56,7 @@ const Login = () => {
                     className='p-10 gap-3 flex flex-col bg-slate-500 backdrop-opacity-15 rounded'
                     onSubmit={handleSubmit}
                 >
-                    {/* Используем errors, чтобы убрать предупреждение ESLint */}
+                    {/* ✅ Используем errors — убираем предупреждение ESLint */}
                     {errors && (
                         <p className="text-red-600 font-bold text-center mb-2 bg-white p-2 rounded">
                             {errors}

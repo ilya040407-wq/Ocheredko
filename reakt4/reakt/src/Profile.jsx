@@ -4,50 +4,48 @@ import Header from './Header'
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
-// useEffect - выполнять побочные эффекты
 const Profile = () => {
-    const [loading, setLoading] = useState(true) // создаем функцию загрузки и ее начало
-    const [user, setUser] = useState(null) // создаем функцию сбора данных о пользователях
-    const [error, setError] = useState('') // создаем функцию ошибок
-    const navigate = useNavigate() // создаем функцию навигации
+    const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState(null)
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
 
     useEffect(() => {
-        const fetchData = async () => { // создаем функцию работающую параллельно с программой на сбор данных
+        const fetchData = async () => {
             try {
-                const token = localStorage.getItem('token') // берем токен из хранилища
-                if (!token) { // проверяем наличие токена
-                    navigate('/login') // направляем на вход
+                const token = localStorage.getItem('token')
+                if (!token) {
+                    navigate('/login')
                     return
                 }
-                // await fetch('адрес сервера')
                 const response = await fetch(`${API_URL}/login/`, {
                     headers: {
-                        'Authorization': `Token ${token}`, // шапки для ключевых слов(тип токена)
-                        'Content-Type': 'application/json' // шапки для ключевых слов(в каком виде вернуть файлы)
+                        'Authorization': `Token ${token}`,
+                        'Content-Type': 'application/json'
                     }
                 })
-                if (!response.ok) { // выдать ошибку при неверном токене
+                if (!response.ok) {
                     throw new Error('404')
                 }
-                const data = await response.json() // забрать данные пользователей из файлов(в формате json)
+                const data = await response.json()
                 setUser(data)
-            } catch (err) { // поймать ошибку, которая появилась из-за совпадения логина или/и пароля
+            } catch (err) {
                 setError(err.message)
-                localStorage.removeItem('token') // забрать токен
-                navigate('/login') // направляем на вход
+                localStorage.removeItem('token')
+                navigate('/login')
             } finally {
-                setLoading(false) // завершить загрузку
+                setLoading(false)
             }
         }
         fetchData()
-    }, [navigate]) // заблокировать возможность вернутся через стрелку назад
+    }, [navigate])
 
-    const logout = () => { // настройки для кнопки выйти
+    const logout = () => {
         localStorage.removeItem('token')
         navigate('/', { replace: true })
     }
 
-    // Используем loading и error, чтобы убрать предупреждение ESLint
+    // ✅ Используем loading и error — убираем предупреждение ESLint
     if (loading) return <div className="text-white text-center p-5">Загрузка...</div>
     if (error) return <div className="text-red-500 text-center p-5">Ошибка: {error}</div>
 
@@ -57,18 +55,17 @@ const Profile = () => {
             <div className="p-5">
                 <h2 className='text-3xl font-medium'>
                     Имя пользователя: <strong className='text-4xl'>{user?.username}</strong>
-                </h2> {/* сбор данных из сервера (имя пользователя) */}
+                </h2>
                 <h2 className='text-3xl font-medium mt-2'>
                     Email: <strong className='text-4xl'>{user?.email}</strong>
                 </h2>
-                {/* Пароль убран в целях безопасности! */}
-
+                {/* Пароль НЕ выводим в целях безопасности */}
                 <button
                     onClick={logout}
                     className="mt-5 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                 >
                     Выйти
-                </button> {/* кнопка выйти */}
+                </button>
             </div>
         </div>
     )
