@@ -138,6 +138,7 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1']
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://ocheredko-rm90.onrender.com",
+    "zxc-beryl-psi.vercel.app"
 ]
 
 CORS_ALLOWED_METHODS = [
