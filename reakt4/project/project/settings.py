@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-q@u6q(z+5%j33qujzcj(65y#u_zwk5x7mdb4b=d&62ckv9k91y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ocheredko-rm90.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 
 # Application definition
@@ -91,10 +91,10 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600
+    )
 }
 
 
@@ -138,7 +138,6 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1']
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://ocheredko-rm90.onrender.com",
-    "postgresql://neondb_owner:npg_W1mjodVfcKv3@ep-summer-mud-asod5dm9.c-4.eu-central-1.aws.neon.tech/neondb?sslmode=require"
 ]
 
 CORS_ALLOWED_METHODS = [
