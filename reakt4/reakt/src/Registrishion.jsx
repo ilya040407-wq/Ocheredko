@@ -6,43 +6,44 @@ import Foter from './Foter'
 const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
 const Registrishion = () => {
-    const [error, setErrors] = useState('')
-    const navigate = useNavigate()
-    const [fromData, setfromData] = useState({
+    const [error, setErrors] = useState('') // создание функции ошибок
+    const navigate = useNavigate() // создание функции навигации
+    const [fromData, setfromData] = useState({ // создание функции данных, которые будут передаваться
+        // сами данные
         username: '',
         email: '',
         password: '',
     })
 
-    const handelChange = (e) => {
-        const { name, value } = e.target
-        setfromData({ ...fromData, [name]: value })
+    const handelChange = (e) => { // создание функции изменений данных
+        const { name, value } = e.target // данные которые будут вноситься (name- название строки, value-данные находящейся в этой строке)
+        setfromData({ ...fromData, [name]: value }) // берется из fromData данные name и value и передает в setfromData
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
+            // const response = await fetch('адрес сервера')
             const response = await fetch(`${API_URL}/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
+                body: JSON.stringify({ // отправляем конкретные данные
                     username: fromData.username,
                     email: fromData.email,
                     password: fromData.password,
                 })
             })
-
-            if (!response.ok) {
-                const data = await response.json()
+            if (!response.ok) { // если не получили данные, то выдаем ошибку
+                const data = await response.json() // ожидаем до последнего конца
                 throw new Error(data.error || 'Ошибка регистрации')
             } else {
-                const data = await response.json()
+                const data = await response.json() // если получили данные, то создаем токен
                 localStorage.setItem('token', data.token)
                 navigate('/login')
             }
-        } catch (err) {
+        } catch (err) { // ловим ошибки
             setErrors(err.message)
         }
     }
@@ -55,7 +56,7 @@ const Registrishion = () => {
                     className='p-10 gap-3 flex flex-col bg-gradient-to-r from-yellow-300 via-zinc-300 to-yellow-300 rounded'
                     onSubmit={handleSubmit}
                 >
-                    {/* ✅ Используем error — предупреждение исчезнет */}
+                    {/* Используем error, чтобы убрать предупреждение ESLint */}
                     {error && (
                         <p className="text-red-600 font-bold text-center mb-2 bg-white p-2 rounded">
                             {error}
