@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Header from './Header'
 import Foter from './Foter'
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
 const Login = () => {
       const navigate = useNavigate()
@@ -20,7 +21,7 @@ const[errors,setErrors] = useState('')// создание фукций ошиб�
     const handleSubmit = async(e)=>{
         e.preventDefault()
         try{ //const response = await fetch('адрес сервера')
-            const response = await fetch('http://127.0.0.1:8000/login/',{ 
+            const response = await fetch(`${API_URL}/login`,{ 
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json'

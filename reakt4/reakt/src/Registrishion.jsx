@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Header from './Header'
 import Foter from './Foter'
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
 const Registrishion = () => {
     const[error,setErrors] = useState('')// создание фукций ошибок
@@ -20,7 +21,7 @@ const Registrishion = () => {
     const handleSubmit = async(e)=>{
         e.preventDefault()
         try{ //const response = await fetch('адрес сервера')
-            const response = await fetch('http://127.0.0.1:8000/register/',{ 
+            const response = await fetch(`${API_URL}/login/`,{ 
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json'

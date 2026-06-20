@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from './Header'
 
-
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 // useEffect - выполнять побочные эффекты 
 
 const Profile = () => {
@@ -20,7 +20,7 @@ const Profile = () => {
                     return 
                 }
                 // await fetch('адрес сервера ')
-                const response = await fetch('http://127.0.0.1:8000/profile/ ',{
+                const response = await fetch(`${API_URL}/login/`,{
                     headers:{
                         'Authorization': 'Token $ {token}', // шапки для кулючевых слов(тип токена)
                         'Content-Type': 'application/json' // шапки для кулючевых слов(в каком виде вернуть файлы)
