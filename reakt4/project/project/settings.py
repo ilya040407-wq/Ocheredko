@@ -131,7 +131,7 @@ USE_TZ = True
 
 ROOT_URLCONF = 'project.urls'
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = ['localhost','127.0.0.1', 'ocheredko-rm90.onrender.com']
 
 
 
