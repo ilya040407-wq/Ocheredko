@@ -16,25 +16,24 @@ const Registrishion = () => {
 
     const handelChange = (e) => {
         const { name, value } = e.target
-        setfromData({ ...fromData, [name]: value }) // Исправлена опечатка . ..
+        setfromData({ ...fromData, [name]: value })
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        try { 
-            // Примечание: обычно для регистрации используется эндпоинт /register/, а не /login/
-            const response = await fetch(`${API_URL}/login/`, { 
+        try {
+            const response = await fetch(`${API_URL}/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     username: fromData.username,
                     email: fromData.email,
-                    password: fromData.password, // Исправлена опечатка f romData
+                    password: fromData.password,
                 })
             })
-            
+
             if (!response.ok) {
                 const data = await response.json()
                 throw new Error(data.error || 'Ошибка регистрации')
@@ -43,8 +42,8 @@ const Registrishion = () => {
                 localStorage.setItem('token', data.token)
                 navigate('/login')
             }
-        } catch (err) { 
-            setErrors(err.message) // Исправлены опечатки setEr rors и massege
+        } catch (err) {
+            setErrors(err.message)
         }
     }
 
@@ -52,24 +51,53 @@ const Registrishion = () => {
         <div>
             <Header />
             <div className='bg-gray-800 p-5 text-lg flex justify-center'>
-                <form className='p-10 gap-3 flex flex-col bg-gradient-to-r from-yellow-300 via-zinc-300 to-yellow-300 rounded' onSubmit={handleSubmit}>
-                    
-                    {/* Вывод ошибки на экран */}
-                    {error && <p className="text-red-600 font-bold text-center mb-2">{error}</p>}
+                <form
+                    className='p-10 gap-3 flex flex-col bg-gradient-to-r from-yellow-300 via-zinc-300 to-yellow-300 rounded'
+                    onSubmit={handleSubmit}
+                >
+                    {/* ✅ Используем error — предупреждение исчезнет */}
+                    {error && (
+                        <p className="text-red-600 font-bold text-center mb-2 bg-white p-2 rounded">
+                            {error}
+                        </p>
+                    )}
 
-                    <input type="text" name='username' placeholder='ФИО'
-                        onChange={handelChange} value={fromData.username} required
-                        className='text-black w-[300px] h-[50px] rounded-[10px] p-4' />
-                        
-                    <input type="email" name='email' placeholder='email'
-                        onChange={handelChange} value={fromData.email} required
-                        className='text-black w-[300px] h-[50px] rounded-[10px] p-4' />
-                        
-                    <input type="password" name='password' placeholder='password'
-                        onChange={handelChange} value={fromData.password} required
-                        className='text-black w-[300px] h-[50px] rounded-[10px] p-4' />
-                        
-                    <button type="submit" className='bg-red-300 text-white w-[300px] h-[50px] rounded hover:bg-red-400'> создать аккаунт </button>
+                    <input
+                        type="text"
+                        name='username'
+                        placeholder='ФИО'
+                        onChange={handelChange}
+                        value={fromData.username}
+                        required
+                        className='text-black w-[300px] h-[50px] rounded-[10px] p-4'
+                    />
+
+                    <input
+                        type="email"
+                        name='email'
+                        placeholder='email'
+                        onChange={handelChange}
+                        value={fromData.email}
+                        required
+                        className='text-black w-[300px] h-[50px] rounded-[10px] p-4'
+                    />
+
+                    <input
+                        type="password"
+                        name='password'
+                        placeholder='password'
+                        onChange={handelChange}
+                        value={fromData.password}
+                        required
+                        className='text-black w-[300px] h-[50px] rounded-[10px] p-4'
+                    />
+
+                    <button
+                        type="submit"
+                        className='bg-red-300 text-white w-[300px] h-[50px] rounded hover:bg-red-400'
+                    >
+                        создать аккаунт
+                    </button>
                 </form>
             </div>
             <Foter />
