@@ -9,8 +9,8 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-q@u6q(z+5%j33qujzcj(65y#u_zwk5x7mdb4b=d&62ckv9k91y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 
 # Application definition
@@ -131,12 +131,14 @@ USE_TZ = True
 
 ROOT_URLCONF = 'project.urls'
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = ['localhost','127.0.0.1', 'ocheredko-rm90.onrender.com' ]
 
 
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    "http://localhost:3000",
+    "https://your-frontend-domain.vercel.app",
+    "postgresql://neondb_owner:npg_W1mjodVfcKv3@ep-summer-mud-asod5dm9.c-4.eu-central-1.aws.neon.tech/neondb?sslmode=require"
 ]
 
 CORS_ALLOWED_METHODS = [
