@@ -137,7 +137,7 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://your-frontend-domain.vercel.app",
+    "https://ocheredko-rm90.onrender.com",
     "postgresql://neondb_owner:npg_W1mjodVfcKv3@ep-summer-mud-asod5dm9.c-4.eu-central-1.aws.neon.tech/neondb?sslmode=require"
 ]
 
