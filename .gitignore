@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+reakt4/reakt/node_modules/
+
+# Build
+reakt4/reakt/build/
+
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+reakt4/project/db.sqlite3
+venv/
+.env
+.env.local
+reakt4/project/.env
+reakt4/reakt/.env.local
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
