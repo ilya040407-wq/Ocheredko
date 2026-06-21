@@ -4,8 +4,10 @@ Django settings for project project.
 import os
 from pathlib import Path
 import dj_database_url
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
@@ -117,12 +119,14 @@ CORS_ALLOW_HEADERS = [
 
 STATIC_URL = 'static/'
 
-# SMTP / обратная связь (настройте переменные окружения на сервере)
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+# SMTP / обратная связь
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.mail.ru')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() in ('true', '1', 'yes')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '20'))
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@example.com')
 FEEDBACK_RECIPIENT = os.environ.get('FEEDBACK_RECIPIENT', EMAIL_HOST_USER or 'admin@example.com')
 

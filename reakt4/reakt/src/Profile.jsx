@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from './Header'
-import Foter from './Foter'
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'
+import API_URL from './api'
 
 const Profile = () => {
   const [loading, setLoading] = useState(true)
@@ -82,9 +80,7 @@ const Profile = () => {
         >
           Выйти
         </button>
-      </div>
-      <Foter />
-    </div>
+      </div></div>
   )
 }
 

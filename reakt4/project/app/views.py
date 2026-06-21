@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
@@ -7,8 +7,26 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
-from .models import User
+from .models import User, Feedback
 from .serializers import UserSerializer, FeedbackSerializer
+import smtplib
+
+
+def _smtp_configured():
+    return (
+        'smtp.EmailBackend' in settings.EMAIL_BACKEND
+        and settings.EMAIL_HOST_USER
+        and settings.EMAIL_HOST_PASSWORD
+    )
+
+
+def _smtp_error_message(exc):
+    if isinstance(exc, smtplib.SMTPAuthenticationError):
+        return (
+            'Ошибка авторизации SMTP. Для Mail.ru нужен пароль приложения: '
+            'https://help.mail.ru/mail/security/protection/external'
+        )
+    return f'Не удалось отправить письмо: {exc}'
 
 
 class UserListView(generics.ListCreateAPIView):
@@ -84,11 +102,29 @@ class FeedbackApiView(APIView):
     authentication_classes = []
 
     def post(self, request):
+        if not _smtp_configured():
+            return Response(
+                {
+                    'success': False,
+                    'message': (
+                        'SMTP не настроен на сервере. '
+                        'Добавьте EMAIL_HOST_USER и EMAIL_HOST_PASSWORD в переменные окружения Render.'
+                    ),
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
         serializer = FeedbackSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         data = serializer.validated_data
+        feedback = Feedback.objects.create(
+            name=data['name'],
+            email=data['email'],
+            message=data['message'],
+        )
+
         subject = f'Обратная связь: {data["name"]}'
         message = (
             f'Имя: {data["name"]}\n'
@@ -97,20 +133,27 @@ class FeedbackApiView(APIView):
         )
 
         try:
-            send_mail(
+            email = EmailMessage(
                 subject=subject,
-                message=message,
+                body=message,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.FEEDBACK_RECIPIENT],
-                fail_silently=False,
+                to=[settings.FEEDBACK_RECIPIENT],
+                reply_to=[data['email']],
             )
+            email.send(fail_silently=False)
+            feedback.email_sent = True
+            feedback.save(update_fields=['email_sent'])
         except Exception as exc:
             return Response(
-                {'success': False, 'message': f'Не удалось отправить письмо: {exc}'},
+                {
+                    'success': False,
+                    'message': _smtp_error_message(exc),
+                    'saved': True,
+                },
                 status=status.HTTP_503_SERVICE_UNAVAILABLE,
             )
 
         return Response(
-            {'success': True, 'message': 'Сообщение успешно отправлено'},
+            {'success': True, 'message': 'Сообщение успешно отправлено на почту'},
             status=status.HTTP_200_OK,
         )
